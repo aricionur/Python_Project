@@ -1,3 +1,5 @@
+from Introduction_to_python.cities import City
+
 def find_cities(telephone_numbers):
 
     domain_code_list = set()
