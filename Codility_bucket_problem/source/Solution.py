@@ -5,8 +5,6 @@ def solution(N, Q, B, C):
 
     buckets = [Bucket(i) for i in range(N)]
 
-
-
     num_balls = len(B)
     for i in range(num_balls):
         bucket_id = B[i]
