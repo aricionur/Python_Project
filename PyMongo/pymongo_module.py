@@ -9,82 +9,59 @@ db = client.test_db
 
 collection = db.test_collection
 
-####### Insert a document
-# post = { "author": "onur_3",
-#          "text": "my first blog post"
-#          }
-# result = collection.insert_one(post)
-# print("resulted id :", result.inserted_id)
-
-##### Insert many docs
-
-cars = [ {'name': 'Audi', 'price': 52642},
-         {'name': 'Mercedes', 'price': 57127},
-         {'name': 'Skoda', 'price': 9000},
-         {'name': 'Volvo', 'price': 29000},
-         {'name': 'Bentley', 'price': 350000},
-         {'name': 'Citroen', 'price': 21000},
-         {'name': 'Hummer', 'price': 41400},
-         {'name': 'Volkswagen', 'price': 21600} ]
-
-collection.insert_many(cars)
-
-cursor = collection.find()
-
-# ref_car = Car("audi", "150")
-# print(ref_car)
-
-
-
-print("all collection and add to car_list :")
-car_list = [Car(next["name"], next["price"]) for next in cursor]
-# car_list = []
-# for next in cursor:
-#
-#     # print(next["name"], ":", next["price"])
-#     car_list.append( Car( next["name"], next["price"] ) )
-
-print("printing car list :")
-for car in car_list:
-    print(car.name, car.price)
-
-
-# all_collection = [next for next in cursor]
-#
-# for next in all_collection:
-#     print(next["name"])
-
 collection.drop()
 
+def insert_single_doc(doc):
+    object_id = collection.insert_one(doc).inserted_id
+    return object_id
 
-# print("next doc : ", cursor.next())
-# print("next doc : ", cursor.next())
-# print("next doc : ", cursor.next())
-# print("next doc : ", cursor.next())
+def insert_many_docs(docs):
+    result = collection.insert_many(docs)
+    return result
+
+def get_first_doc():
+    return collection.find_one()
+
+def get_single_doc(key, value):                  #returns first matching doc in collection
+    return collection.find_one({key: value})
+
+def get_doc_by_objectId(object_id):
+    return collection.find_one(object_id)
+
+def get_all_collection():
+    cursor = collection.find()
+    return [Car(next["name"], next["price"]) for next in cursor]
 
 
-####### Get a first document ****
-# result = collection.find_one()
-#
-# print("result :", result[_id])
+cars = [{'name': 'Audi', 'price': 200},
+        {'name': 'Mercedes', 'price': 57127},
+        {'name': 'Skoda', 'price': 9000},
+        {'name': 'Volvo', 'price': 29000},
+        {'name': 'Bentley', 'price': 350000},
+        {'name': 'Citroen', 'price': 21000},
+        {'name': 'Hummer', 'price': 41400},
+        {'name': 'Volkswagen', 'price': 21600}]
 
-###### Get a single document ****
-# result = collection.find_one({"author": "onur_3"})
-# print("result :", result)
+audi_2 = {'name': 'Audi', 'price': 100}
+insert_single_doc(audi_2)
 
-###### Query bu ObjectId
-# post = {"author": "onur_6",
-#         "text": "inserting onur_6"}
-# object_id = collection.insert_one(post).inserted_id
-#
-# print("gettting doc by object_id")
-# returned_doc = collection.find_one({"_id": object_id})
-# print("returned doc :", returned_doc)
-#
-# print("gettting doc by string object_id")
-# object_id_as_str = str(object_id)
-# returned_doc_2 = collection.find_one({"_id": object_id_as_str})  # returns None
-# print("returned doc_2 :", returned_doc_2)
+insert_many_docs(cars)
+
+
+print("First doc is : \n", get_first_doc())
+
+print("Price of Audi is : \n", get_single_doc("name", "Audi"))
+
+
+audi_3 = {'name': 'Audi', 'price': 5500}
+object_id = insert_single_doc(audi_3)
+print("doc with object_id :", object_id, "is :", get_doc_by_objectId(object_id) )
+
+
+print("printing test_collection :")
+car_list = get_all_collection()
+for car in car_list:
+    print(car.name, ":", car.price)
 
 
 print("\nprogram ended...")
