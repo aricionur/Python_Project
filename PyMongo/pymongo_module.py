@@ -29,9 +29,11 @@ def get_doc_by_objectId(object_id):
     return collection.find_one(object_id)
 
 def get_all_collection():
-    cursor = collection.find()
-    return [Car(next["name"], next["price"]) for next in cursor]
+    # cursor = collection.find()
+    return [Car(next["name"], next["price"]) for next in collection.find()]
 
+def count_docs(collection):
+    return collection.find().count()
 
 cars = [{'name': 'Audi', 'price': 200},
         {'name': 'Mercedes', 'price': 57127},
@@ -62,6 +64,31 @@ print("printing test_collection :")
 car_list = get_all_collection()
 for car in car_list:
     print(car.name, ":", car.price)
+
+print("num of docs in collection :",count_docs(collection))
+
+print("filter operations : ")
+
+# condition
+print("condition :")
+cursor_gt = collection.find({"price": {"$gt": 50000}})
+for doc in cursor_gt:
+    print("result :", doc)
+
+# sorting
+print("sorting :")
+cursor_sort = collection.find().sort("price", 1)
+for doc in cursor_sort:
+    print("result :", doc)
+
+# project
+print("project : ")
+cursor_project = collection.find({}, {"_id": 1})
+for doc in cursor_project:
+    print("result :", doc)
+
+
+
 
 
 print("\nprogram ended...")
